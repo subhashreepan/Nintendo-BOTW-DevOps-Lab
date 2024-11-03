@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Nintendo BOTW"
+    return "korak seed ui"
 
 if __name__ == "__main__":
     app.run(debug=True)
