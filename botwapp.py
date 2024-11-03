@@ -4,7 +4,8 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Shrine history ui"
+    print ("Shrine-history-ui")
+    return "Nintendo-botw-ui"
 
 if __name__ == "__main__":
     app.run(debug=True)
