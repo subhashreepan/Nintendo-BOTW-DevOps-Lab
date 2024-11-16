@@ -28,7 +28,7 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          pytest tests/ --junitxml=test-results.xml
+          pytest D:\LAB 2\Nintendo-BOTW-DevOps-Lab\tests\ --junitxml=test-results.xml
 
       - name: Upload Test Results
         uses: actions/upload-artifact@v3
