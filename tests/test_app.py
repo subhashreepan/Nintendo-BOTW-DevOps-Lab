@@ -1,5 +1,6 @@
 import pytest
-from app import app
+from botwapp.app import app
+
 
 @pytest.fixture
 def client():
@@ -9,4 +10,4 @@ def client():
 def test_home_route(client):
     response = client.get("/")
     assert response.status_code == 200
-    assert response.data == b"Welcome to BOTW!"
+    assert response.data == b'Welcome to BOTW!'
