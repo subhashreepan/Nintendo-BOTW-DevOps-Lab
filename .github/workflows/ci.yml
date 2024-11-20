@@ -73,11 +73,11 @@ jobs:
         id: find-issue
         run: |
           # Check PR title for issue number
-          ISSUE_NUMBER=$(echo "${{ github.event.pull_request.title }}" | grep -oE "@[0-9]+" | head -1 | tr -d "#")
+          ISSUE_NUMBER=$(echo "${{ github.event.pull_request.title }}" | grep -oE "@[0-9]+" | head -1 | tr -d "@")
           
           # If not found, check PR body
           if [ -z "$ISSUE_NUMBER" ]; then
-            ISSUE_NUMBER=$(echo "${{ github.event.pull_request.body }}" | grep -oE "@[0-9]+" | head -1 | tr -d "#")
+            ISSUE_NUMBER=$(echo "${{ github.event.pull_request.body }}" | grep -oE "@[0-9]+" | head -1 | tr -d "@")
           fi
 
           if [ -z "$ISSUE_NUMBER" ]; then
@@ -91,5 +91,5 @@ jobs:
       - name: Move Linked Issue to Done
         if: env.issue_number
         run: |
-          echo "Moving issue #${ISSUE_NUMBER} to Done."
+          echo "Moving issue @${ISSUE_NUMBER} to Done."
           gh issue edit $ISSUE_NUMBER --add-label "Done" --repo subhashreepan/Nintendo-BOTW-DevOps-Lab
