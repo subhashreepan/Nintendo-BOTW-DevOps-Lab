@@ -98,8 +98,8 @@ jobs:
         run: |
           echo "Issue number from previous step: ${{ env.issue_number }}"  
         
-      - name: Move Linked Issue to Done
+      - name: Close the Issue
         if: env.issue_number
         run: |
-          echo "Moving issue ${ISSUE_NUMBER} to Done."
-          gh issue edit ${{ env.issue_number }} --add-label "Done" --repo subhashreepan/Nintendo-BOTW-DevOps-Lab
+          echo "Closing issue ${ISSUE_NUMBER}."
+          gh issue close $ISSUE_NUMBER --repo subhashreepan/Nintendo-BOTW-DevOps-Lab
