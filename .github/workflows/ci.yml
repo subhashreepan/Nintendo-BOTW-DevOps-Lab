@@ -69,7 +69,7 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Find Related Issue
+      - name: Find Related Issue Number
         id: find-issue
         run: |
           # Check PR title for issue number
