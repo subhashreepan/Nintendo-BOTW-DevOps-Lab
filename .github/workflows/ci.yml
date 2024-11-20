@@ -91,5 +91,5 @@ jobs:
       - name: Move Linked Issue to Done
         if: env.issue_number
         run: |
-          echo "Moving issue @${ISSUE_NUMBER} to Done."
+          echo "Moving issue ${ISSUE_NUMBER} to Done."
           gh issue edit $ISSUE_NUMBER --add-label "Done" --repo subhashreepan/Nintendo-BOTW-DevOps-Lab
