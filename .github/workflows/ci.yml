@@ -94,7 +94,7 @@ jobs:
           echo "Found issue: $ISSUE_NUMBER"
           echo "issue_number=$ISSUE_NUMBER" >> $GITHUB_ENV
 
-      - name: Debug: Check ISSUE_NUMBER
+      - name: Debug Check ISSUE_NUMBER
         run: |
           echo "Issue number from previous step: $ISSUE_NUMBER"
         
