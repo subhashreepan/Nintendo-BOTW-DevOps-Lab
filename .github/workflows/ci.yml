@@ -65,7 +65,7 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
   #CI Job: Automate Issue Movement to Done
-  move_linked_issue:
+  move_issue:
     if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
