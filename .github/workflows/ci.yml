@@ -64,36 +64,42 @@ jobs:
         run: |
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-  #Automate Issue Movement to Done
+  # Automate Issue Movement to Done
   move_issue:
-  if: ${{ github.event_name == 'pull_request' }}
-  runs-on: ubuntu-latest
-  steps:
-    - name: Find Related Issue
-      id: find-issue
-      run: |
-        # Check PR title for issue number using @<number> format
-        ISSUE_NUMBER=$(echo "${{ github.event.pull_request.title }}" | grep -oE "@[0-9]+" | head -1 | tr -d "@")
+    if: ${{ github.event_name == 'pull_request' && github.event.action == 'closed' }}  # Runs only when PR is closed
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Authenticate GitHub CLI
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+
+      - name: Find Related Issue
+        id: find-issue
+        run: |
+          # Check PR title for issue number using #<number> format
+          ISSUE_NUMBER=$(echo "${{ github.event.pull_request.title }}" | grep -oE "#[0-9]+" | head -1 | tr -d "#")
+          
+          # If not found, check PR body using #<number> format
+          if [ -z "$ISSUE_NUMBER" ]; then
+            ISSUE_NUMBER=$(echo "${{ github.event.pull_request.body }}" | grep -oE "#[0-9]+" | head -1 | tr -d "#")
+          fi
+
+          if [ -z "$ISSUE_NUMBER" ]; then
+            echo "No issue number found in PR title or body."
+            exit 1  # Fail the job if no issue number is found
+          fi
+
+          echo "Found issue: $ISSUE_NUMBER"
+          echo "issue_number=$ISSUE_NUMBER" >> $GITHUB_ENV
+
+      - name: Debug: Check ISSUE_NUMBER
+        run: |
+          echo "Issue number from previous step: $ISSUE_NUMBER"
         
-        # If not found, check PR body using @<number> format
-        if [ -z "$ISSUE_NUMBER" ]; then
-          ISSUE_NUMBER=$(echo "${{ github.event.pull_request.body }}" | grep -oE "@[0-9]+" | head -1 | tr -d "@")
-        fi
-
-        if [ -z "$ISSUE_NUMBER" ]; then
-          echo "No issue number found in PR title or body."
-          exit 1  # Fail the job if no issue number is found
-        fi
-
-        echo "Found issue: $ISSUE_NUMBER"
-        echo "issue_number=$ISSUE_NUMBER" >> $GITHUB_ENV
-
-    - name: Debug: Check ISSUE_NUMBER
-      run: |
-        echo "Issue number from previous step: $ISSUE_NUMBER"
-        
-    - name: Move Linked Issue to Done
-      if: env.issue_number
-      run: |
-        echo "Moving issue #${ISSUE_NUMBER} to Done."
-        gh issue edit $ISSUE_NUMBER --add-label "Done" --repo subhashreepan/Nintendo-BOTW-DevOps-Lab
+      - name: Move Linked Issue to Done
+        if: env.issue_number
+        run: |
+          echo "Moving issue #${ISSUE_NUMBER} to Done."
+          gh issue edit $ISSUE_NUMBER --add-label "Done" --repo subhashreepan/Nintendo-BOTW-DevOps-Lab
