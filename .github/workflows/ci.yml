@@ -101,5 +101,5 @@ jobs:
       - name: Close the Issue
         if: env.issue_number
         run: |
-          echo "Closing issue ${ISSUE_NUMBER}."
-          gh issue close $ISSUE_NUMBER --repo subhashreepan/Nintendo-BOTW-DevOps-Lab
+          echo "Closing issue ${{ env.issue_number }}."
+          gh issue close ${{ env.issue_number }} --repo subhashreepan/Nintendo-BOTW-DevOps-Lab
