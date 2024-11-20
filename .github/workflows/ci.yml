@@ -66,6 +66,7 @@ jobs:
 
   #CI Job: Automate Issue Movement to Done
   move_linked_issue:
+    if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
     steps:
       - name: Find Related Issue
