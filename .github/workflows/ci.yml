@@ -65,27 +65,31 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
   #CI Job: Automate Issue Movement to Done
-  move-issue:
-    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.merged == true }}
-    name: Move Linked Issues to Done
+  move_linked_issue:
+    if: ${{ github.event_name == 'pull_request' }}
     runs-on: ubuntu-latest
-
     steps:
-      - name: Set up GitHub CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gh
-
       - name: Find Related Issue
         id: find-issue
         run: |
+          # Check PR title for issue number
           ISSUE_NUMBER=$(echo "${{ github.event.pull_request.title }}" | grep -oE "#[0-9]+" | head -1 | tr -d "#")
+          
+          # If not found, check PR body
+          if [ -z "$ISSUE_NUMBER" ]; then
+            ISSUE_NUMBER=$(echo "${{ github.event.pull_request.body }}" | grep -oE "#[0-9]+" | head -1 | tr -d "#")
+          fi
+
+          if [ -z "$ISSUE_NUMBER" ]; then
+            echo "No issue number found in PR title or body."
+            exit 1  # Fail the job if no issue number is found
+          fi
+
+          echo "Found issue: $ISSUE_NUMBER"
           echo "issue_number=$ISSUE_NUMBER" >> $GITHUB_ENV
 
-      - name: Move Issue to Done
+      - name: Move Linked Issue to Done
         if: env.issue_number
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Moving issue #${ISSUE_NUMBER} to Done."
-          gh issue edit $ISSUE_NUMBER --add-label "Done" --repo ${{ github.repository }}
+          gh issue edit $ISSUE_NUMBER --add-label "Done" --repo subhashreepan/Nintendo-BOTW-DevOps-Lab
