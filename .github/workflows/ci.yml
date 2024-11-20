@@ -79,7 +79,7 @@ jobs:
       - name: Find Related Issue
         id: find-issue
         run: |
-          ISSUE_NUMBER=$(echo "${{ github.event.pull_request.body }}" | grep -oE "#[0-9]+" | head -1 | tr -d "#")
+          ISSUE_NUMBER=$(echo "${{ github.event.pull_request.title }}" | grep -oE "#[0-9]+" | head -1 | tr -d "#")
           echo "issue_number=$ISSUE_NUMBER" >> $GITHUB_ENV
 
       - name: Move Issue to Done
