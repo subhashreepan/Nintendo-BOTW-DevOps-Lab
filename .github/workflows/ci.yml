@@ -78,10 +78,10 @@ jobs:
       - name: Find Related Issue
         id: find-issue
         run: |
-          # Check PR title for issue number using #<number> format
+          # Check PR title for issue number using @<number> format
           ISSUE_NUMBER=$(echo "${{ github.event.pull_request.title }}" | grep -oE "@[0-9]+" | head -1 | tr -d "@")
           
-          # If not found, check PR body using #<number> format
+          # If not found, check PR body using @<number> format
           if [ -z "$ISSUE_NUMBER" ]; then
             ISSUE_NUMBER=$(echo "${{ github.event.pull_request.body }}" | grep -oE "@[0-9]+" | head -1 | tr -d "@")
           fi
